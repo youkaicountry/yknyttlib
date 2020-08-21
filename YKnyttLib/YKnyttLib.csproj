@@ -42,7 +42,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="KnyttArea.cs" />
+    <Compile Include="KnyttPagingPolicy.cs" />
     <Compile Include="KnyttPoint.cs" />
+    <Compile Include="KnyttRectPaging.cs" />
     <Compile Include="KnyttWorld.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
