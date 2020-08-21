@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 
 namespace YKnyttLib
@@ -24,6 +23,8 @@ namespace YKnyttLib
         public int AtmosphereB { get; protected set; }
 
         public int Background { get; protected set; }
+
+        public bool Empty { get; private set; }
 
         public TileLayer[] TileLayers { get; protected set; }
         public SpriteLayer[] SpriteLayers { get; protected set; }
@@ -72,8 +73,17 @@ namespace YKnyttLib
             this.loadFromStream(map);
         }
 
+        public KnyttArea(KnyttPoint position, KnyttWorld<OT> world)
+        {
+            this.World = world;
+            this.Empty = true;
+            this.Position = position;
+        }
+
         private void loadFromStream(Stream map)
         {
+            this.Empty = false;
+
             this.parseSize(map);
 
             // Skip misc header stuff

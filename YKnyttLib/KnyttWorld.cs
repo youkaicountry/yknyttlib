@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
 
@@ -58,7 +57,7 @@ namespace YKnyttLib
 
             // Set the map
             this.Size = new KnyttPoint((MaxBounds.x - MinBounds.x) + 1, (MaxBounds.y - MinBounds.y) + 1);
-            this.StartCoord = areas[0].Position; // TODO: Fix this
+            this.StartCoord = areas[0].Position; // TODO: Fix this to find actual world start
             this.Map = new KnyttArea<OT>[this.Size.Area];
 
             foreach (var area in areas)
@@ -67,8 +66,16 @@ namespace YKnyttLib
             }
         }
 
+        // TODO: This logic needs refactoring when things are fleshed out
         public KnyttArea<OT> getArea(KnyttPoint coords)
         {
+            // If outside of bounds, return null
+            if (coords.x < MinBounds.x || coords.x > MaxBounds.x || coords.y < MinBounds.y || coords.y > MaxBounds.y) { return null; }
+
+            var i = getMapIndex(coords);
+
+            // If there is no area stored at the location, create and return an empty area
+            if (this.Map[i] == null) { return new KnyttArea<OT>(coords, this); }
             return this.Map[getMapIndex(coords)];
         }
 
