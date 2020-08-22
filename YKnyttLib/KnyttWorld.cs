@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using IniParser.Model;
+using IniParser.Parser;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 
@@ -6,6 +8,8 @@ namespace YKnyttLib
 {
     public class KnyttWorld<OT>
     {
+        public KnyttWorldInfo Info { get; private set; }
+
         public KnyttPoint MinBounds { get; protected set; }
         public KnyttPoint MaxBounds { get; protected set; }
 
@@ -14,6 +18,8 @@ namespace YKnyttLib
         public List<KnyttArea<OT>> Areas { get; protected set; }
         public KnyttArea<OT>[] Map { get; protected set; }
         public KnyttPoint StartCoord { get; set; }
+
+        private IniData INIData { get; set; }
 
         public const int ASSET_LIMIT = 256;
         public OT[] TilesetsOverride { get; }
@@ -34,12 +40,14 @@ namespace YKnyttLib
             this.MaxBounds = new KnyttPoint(int.MinValue, int.MinValue);
         }
 
-        public KnyttWorld(Stream map, Stream world_cfg) : this()
+        public void loadWorldConfig(string world_ini)
         {
-            this.parseWorldFiles(map, world_cfg);
+            var parser = new IniDataParser();
+            this.INIData = parser.Parse(world_ini);
+            this.Info = new KnyttWorldInfo(INIData["World"]);
         }
 
-        public void parseWorldFiles(Stream map, Stream world_cfg)
+        public void loadWorldMap(Stream map)
         {
             GZipStream gz = new GZipStream(map, CompressionMode.Decompress);
 
