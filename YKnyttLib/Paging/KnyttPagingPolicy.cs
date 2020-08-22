@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace YKnyttLib
+namespace YKnyttLib.Paging
 {
     public abstract class KnyttPagingPolicy<T>
     {
