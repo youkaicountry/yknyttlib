@@ -6,6 +6,11 @@ using System.IO.Compression;
 
 namespace YKnyttLib
 {
+    public class KnyttWorld : KnyttWorld<string>
+    {
+        public KnyttWorld() : base() { }
+    }
+
     public class KnyttWorld<OT>
     {
         public KnyttWorldInfo Info { get; private set; }
@@ -17,16 +22,21 @@ namespace YKnyttLib
 
         public List<KnyttArea<OT>> Areas { get; protected set; }
         public KnyttArea<OT>[] Map { get; protected set; }
-        public KnyttPoint StartCoord { get; set; }
 
         private IniData INIData { get; set; }
 
         public const int ASSET_LIMIT = 256;
+
         public OT[] TilesetsOverride { get; }
         public OT[] AmbianceOverride { get; }
         public OT[] GradientsOverride { get; }
         public OT[] MusicOverride { get; }
         public OT[] ObjectsOverride { get; }
+
+        public OT WorldDirectory { get; private set; }
+        public string WorldDirectoryName { get; private set; }
+
+        public KnyttSave<OT> CurrentSave { get; set; }
 
         public KnyttWorld()
         {
@@ -65,7 +75,6 @@ namespace YKnyttLib
 
             // Set the map
             this.Size = new KnyttPoint((MaxBounds.x - MinBounds.x) + 1, (MaxBounds.y - MinBounds.y) + 1);
-            this.StartCoord = areas[0].Position; // TODO: Fix this to find actual world start
             this.Map = new KnyttArea<OT>[this.Size.Area];
 
             foreach (var area in areas)
@@ -90,6 +99,12 @@ namespace YKnyttLib
         public int getMapIndex(KnyttPoint coords)
         {
             return (coords.y - MinBounds.y) * Size.x + (coords.x - MinBounds.x);
+        }
+
+        public void setDirectory(OT full_dir, string dir_name)
+        {
+            this.WorldDirectory = full_dir;
+            this.WorldDirectoryName = dir_name;
         }
     }
 }

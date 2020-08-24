@@ -3,6 +3,12 @@ using System.Text;
 
 namespace YKnyttLib
 {
+    public class KnyttArea : KnyttArea<string>
+    {
+        public KnyttArea(Stream map, KnyttWorld world) : base(map, world) { }
+        public KnyttArea(KnyttPoint position, KnyttWorld world) : base(position, world) { }
+    }
+
     public class KnyttArea<OT>
     {
         public const int AREA_WIDTH = 25;

@@ -41,10 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="KnyttSave.cs" />
     <Compile Include="KnyttArea.cs" />
-    <Compile Include="KnyttPagingPolicy.cs" />
+    <Compile Include="KnyttWorldManager.cs" />
+    <Compile Include="Paging\KnyttPagingPolicy.cs" />
     <Compile Include="KnyttPoint.cs" />
-    <Compile Include="KnyttRectPaging.cs" />
+    <Compile Include="Paging\KnyttRectPaging.cs" />
     <Compile Include="KnyttWorld.cs" />
     <Compile Include="KnyttWorldInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

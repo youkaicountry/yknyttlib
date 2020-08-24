@@ -18,6 +18,17 @@ namespace YKnyttLibConsole
             var fs = File.Open("Nifflas - The Machine/Map.bin", FileMode.Open);
             world.loadWorldMap(fs);
             fs.Close();
+
+            KnyttWorldManager<bool, bool> manager = new KnyttWorldManager<bool, bool>();
+            manager.addWorld(world, false);
+
+
+            var save = new KnyttSave<bool>(world, File.ReadAllText("Nifflas - The Machine/DefaultSavegame.ini"), 1);
+            save.setPower(3, true);
+            save.setArea(new KnyttPoint(123, 456));
+            save.setAreaPosition(new KnyttPoint(1, 2));
+            save.setPower(13, false);
+            Console.WriteLine(save);
             
 
             stopwatch.Stop();
