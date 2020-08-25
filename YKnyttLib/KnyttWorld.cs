@@ -6,12 +6,7 @@ using System.IO.Compression;
 
 namespace YKnyttLib
 {
-    public class KnyttWorld : KnyttWorld<string>
-    {
-        public KnyttWorld() : base() { }
-    }
-
-    public class KnyttWorld<OT>
+    public class KnyttWorld
     {
         public KnyttWorldInfo Info { get; private set; }
 
@@ -20,32 +15,20 @@ namespace YKnyttLib
 
         public KnyttPoint Size { get; protected set; }
 
-        public List<KnyttArea<OT>> Areas { get; protected set; }
-        public KnyttArea<OT>[] Map { get; protected set; }
+        public List<KnyttArea> Areas { get; protected set; }
+        public KnyttArea[] Map { get; protected set; }
 
         private IniData INIData { get; set; }
 
-        public const int ASSET_LIMIT = 256;
-
-        public OT[] TilesetsOverride { get; }
-        public OT[] AmbianceOverride { get; }
-        public OT[] GradientsOverride { get; }
-        public OT[] MusicOverride { get; }
-        public OT[] ObjectsOverride { get; }
-
-        public OT WorldDirectory { get; private set; }
+        public string WorldDirectory { get; private set; }
         public string WorldDirectoryName { get; private set; }
 
-        public KnyttSave<OT> CurrentSave { get; set; }
+        public bool BinFile { get; protected set; }
+
+        public KnyttSave CurrentSave { get; set; }
 
         public KnyttWorld()
         {
-            this.TilesetsOverride = new OT[ASSET_LIMIT];
-            this.AmbianceOverride = new OT[ASSET_LIMIT];
-            this.GradientsOverride = new OT[ASSET_LIMIT];
-            this.MusicOverride = new OT[ASSET_LIMIT];
-            this.ObjectsOverride = new OT[ASSET_LIMIT];
-
             this.MinBounds = new KnyttPoint(int.MaxValue, int.MaxValue);
             this.MaxBounds = new KnyttPoint(int.MinValue, int.MinValue);
         }
@@ -61,12 +44,12 @@ namespace YKnyttLib
         {
             GZipStream gz = new GZipStream(map, CompressionMode.Decompress);
 
-            var areas = new List<KnyttArea<OT>>();
+            var areas = new List<KnyttArea>();
 
             // Area definition starts with an 'x' character
             while (gz.ReadByte() == 'x')
             {
-                var area = new KnyttArea<OT>(gz, this);
+                var area = new KnyttArea(gz, this);
                 areas.Add(area);
 
                 this.MinBounds = this.MinBounds.min(area.Position);
@@ -75,7 +58,7 @@ namespace YKnyttLib
 
             // Set the map
             this.Size = new KnyttPoint((MaxBounds.x - MinBounds.x) + 1, (MaxBounds.y - MinBounds.y) + 1);
-            this.Map = new KnyttArea<OT>[this.Size.Area];
+            this.Map = new KnyttArea[this.Size.Area];
 
             foreach (var area in areas)
             {
@@ -83,8 +66,26 @@ namespace YKnyttLib
             }
         }
 
+        public byte[] getWorldFile(string filepath)
+        {
+            if (BinFile) { return null; } // TODO: This should handle getting the bin file
+
+            var data = getExternalWorldFile(filepath);
+            return data == null ? getSystemWorldFile(filepath) : data;
+        }
+
+        protected virtual byte[] getExternalWorldFile(string filepath)
+        {
+            return null;
+        }
+
+        protected virtual byte[] getSystemWorldFile(string filepath)
+        {
+            return null;
+        }
+
         // TODO: This logic needs refactoring when things are fleshed out
-        public KnyttArea<OT> getArea(KnyttPoint coords)
+        public KnyttArea getArea(KnyttPoint coords)
         {
             // If outside of bounds, return null
             if (coords.x < MinBounds.x || coords.x > MaxBounds.x || coords.y < MinBounds.y || coords.y > MaxBounds.y) { return null; }
@@ -92,7 +93,7 @@ namespace YKnyttLib
             var i = getMapIndex(coords);
 
             // If there is no area stored at the location, create and return an empty area
-            if (this.Map[i] == null) { return new KnyttArea<OT>(coords, this); }
+            if (this.Map[i] == null) { return new KnyttArea(coords, this); }
             return this.Map[getMapIndex(coords)];
         }
 
@@ -101,7 +102,7 @@ namespace YKnyttLib
             return (coords.y - MinBounds.y) * Size.x + (coords.x - MinBounds.x);
         }
 
-        public void setDirectory(OT full_dir, string dir_name)
+        public void setDirectory(string full_dir, string dir_name)
         {
             this.WorldDirectory = full_dir;
             this.WorldDirectoryName = dir_name;

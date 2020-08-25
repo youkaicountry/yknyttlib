@@ -3,20 +3,14 @@ using System.Text;
 
 namespace YKnyttLib
 {
-    public class KnyttArea : KnyttArea<string>
-    {
-        public KnyttArea(Stream map, KnyttWorld world) : base(map, world) { }
-        public KnyttArea(KnyttPoint position, KnyttWorld world) : base(position, world) { }
-    }
-
-    public class KnyttArea<OT>
+    public class KnyttArea
     {
         public const int AREA_WIDTH = 25;
         public const int AREA_HEIGHT = 10;
         public const int AREA_TILE_LAYERS = 4;
         public const int AREA_SPRITE_LAYERS = 4;
 
-        public KnyttWorld<OT> World { get; }
+        public KnyttWorld World { get; }
 
         public KnyttPoint Position { get; protected set; }
 
@@ -73,13 +67,13 @@ namespace YKnyttLib
         }
 
         // Reads the next area in the map stream
-        public KnyttArea(Stream map, KnyttWorld<OT> world)
+        public KnyttArea(Stream map, KnyttWorld world)
         {
             this.World = world;
             this.loadFromStream(map);
         }
 
-        public KnyttArea(KnyttPoint position, KnyttWorld<OT> world)
+        public KnyttArea(KnyttPoint position, KnyttWorld world)
         {
             this.World = world;
             this.Empty = true;

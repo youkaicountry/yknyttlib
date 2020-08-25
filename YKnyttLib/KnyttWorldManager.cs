@@ -3,19 +3,14 @@ using System.Collections.Generic;
 
 namespace YKnyttLib
 {
-    public class KnyttWorldManager<T> : KnyttWorldManager<string, T>
-    {
-        public KnyttWorldManager() : base() { }
-    }
-
-    public class KnyttWorldManager<OT, T>
+    public class KnyttWorldManager<T>
     {
         public struct WorldEntry
         {
-            public KnyttWorld<OT> world;
+            public KnyttWorld world;
             public T extra_data;
 
-            public WorldEntry(KnyttWorld<OT> world, T extra_data)
+            public WorldEntry(KnyttWorld world, T extra_data)
             {
                 this.world = world;
                 this.extra_data = extra_data;
@@ -31,7 +26,7 @@ namespace YKnyttLib
 
         // TODO: Add indexing by categories
 
-        public void addWorld(KnyttWorld<OT> world, T extra_data)
+        public void addWorld(KnyttWorld world, T extra_data)
         {
             if (world.Info == null) { throw new SystemException("Must load world config first."); }
 

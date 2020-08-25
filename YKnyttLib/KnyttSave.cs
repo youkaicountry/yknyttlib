@@ -3,21 +3,16 @@ using IniParser.Parser;
 
 namespace YKnyttLib
 {
-    public class KnyttSave : KnyttSave<string>
+    public class KnyttSave
     {
-        public KnyttSave(KnyttWorld world, string ini_data, int slot) : base(world, ini_data, slot) { }
-    }
-
-    public class KnyttSave<OT>
-    {
-        public KnyttWorld<OT> World { get; }
+        public KnyttWorld World { get; }
 
         private IniData data;
         public int Slot { get; }
 
         public string SaveFileName { get { return string.Format("{0} {1}.ini", World.WorldDirectoryName, Slot); } }
 
-        public KnyttSave(KnyttWorld<OT> world, string ini_data, int slot)
+        public KnyttSave(KnyttWorld world, string ini_data, int slot)
         {
             this.World = world;
             this.Slot = slot;
