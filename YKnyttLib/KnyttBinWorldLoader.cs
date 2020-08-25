@@ -94,6 +94,9 @@ namespace YKnyttLib
                 //this doesn't match the final files I find, so that is confusing.
                 var fileCount = binaryReader.ReadUInt32();
 
+                // Skip initial N/F
+                binaryReader.BaseStream.Seek(1, SeekOrigin.Current);
+                
                 while (binaryReader.BaseStream.Position < binaryReader.BaseStream.Length)
                 {
                     //skip ['N', 'F']
