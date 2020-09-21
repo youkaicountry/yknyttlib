@@ -26,6 +26,8 @@ namespace YKnyttLib
             return new KnyttPoint(Math.Max(point.x, x), Math.Max(point.y, y));
         }
 
+        public bool isZero() { return this.x == 0 && this.y == 0; }
+
         public static KnyttPoint operator +(KnyttPoint a, KnyttPoint b)
         => new KnyttPoint(a.x + b.x, a.y + b.y);
 

@@ -6,7 +6,7 @@ using System.IO.Compression;
 
 namespace YKnyttLib
 {
-    public class KnyttWorld
+    public abstract class KnyttWorld
     {
         public KnyttWorldInfo Info { get; private set; }
 
@@ -18,14 +18,36 @@ namespace YKnyttLib
         public List<KnyttArea> Areas { get; protected set; }
         public KnyttArea[] Map { get; protected set; }
 
-        private IniData INIData { get; set; }
+        public IniData INIData { get; private set; }
 
         public string WorldDirectory { get; private set; }
-        public string WorldDirectoryName { get; private set; }
 
-        public bool BinFile { get; protected set; }
+        string _dir_name;
+        public string WorldDirectoryName
+        { 
+            get { return _dir_name; } 
+            
+            private set
+            {
+                if (_save != null) { _save.setWorldDirectory(value); }
+                _dir_name = value;
+            }
+        }
 
-        public KnyttSave CurrentSave { get; set; }
+        public bool BinMode { get; protected set; }
+        public KnyttBinWorldLoader BinLoader { get; protected set;}
+
+        KnyttSave _save;
+        public KnyttSave CurrentSave
+        {
+            get { return _save; }
+
+            set
+            {
+                value.setWorldDirectory(WorldDirectoryName);
+                _save = value;
+            }
+        }
 
         public KnyttWorld()
         {
@@ -38,6 +60,18 @@ namespace YKnyttLib
             var parser = new IniDataParser();
             this.INIData = parser.Parse(world_ini);
             this.Info = new KnyttWorldInfo(INIData["World"]);
+        }
+
+        public void setBinMode(KnyttBinWorldLoader loader)
+        {
+            this.BinMode = true;
+            if (loader == null) { return; }
+            this.BinLoader = loader;
+        }
+
+        public void purgeBinFile()
+        {
+            this.BinLoader = null;
         }
 
         public void loadWorldMap(Stream map)
@@ -66,23 +100,70 @@ namespace YKnyttLib
             }
         }
 
-        public byte[] getWorldFile(string filepath)
+        public byte[] getWorldData(string filepath)
         {
-            if (BinFile) { return null; } // TODO: This should handle getting the bin file
+            byte[] data;
+            // If in bin mode, load from the bin loader
+            if (BinMode) { data = this.BinLoader.GetFile(filepath); }
+            else { data = getExternalWorldData(filepath); }
 
-            var data = getExternalWorldFile(filepath);
-            return data == null ? getSystemWorldFile(filepath) : data;
+            return data == null ? getSystemWorldData(filepath) : data;
         }
 
-        protected virtual byte[] getExternalWorldFile(string filepath)
+        protected abstract byte[] getExternalWorldData(string filepath);
+        protected abstract byte[] getSystemWorldData(string filepath);
+
+        public bool worldFileExists(string filepath)
         {
-            return null;
+            if (BinMode) 
+            { 
+                var data = this.BinLoader.GetFile(filepath);
+                return data != null;
+            }
+
+            return externalFileExists(filepath);
         }
 
-        protected virtual byte[] getSystemWorldFile(string filepath)
+        protected abstract bool externalFileExists(string filepath);
+
+        public object getWorldTexture(string filepath)
         {
-            return null;
+            if (BinMode) 
+            { 
+                var data = BinLoader.GetFile(filepath);
+                if (data != null) { return bytesToTexture(data); }
+            } 
+            else 
+            { 
+                var t = getExternalTexture(filepath);
+                if (t != null) { return t; }
+            }
+            return getSystemTexture(filepath);
         }
+
+        protected abstract object bytesToTexture(byte[] data);
+        protected abstract object getExternalTexture(string filepath);
+        protected abstract object getSystemTexture(string filepath);
+
+        public object getWorldSound(string filepath)
+        {
+            if (BinMode)
+            {
+                var data = BinLoader.GetFile(filepath);
+                if (data != null) { return bytesToSound(data); }
+            }
+            else
+            {
+                var t = getExternalSound(filepath);
+                if (t != null) { return t; }
+            }
+            return getSystemSound(filepath);
+        }
+
+        protected abstract object bytesToSound(byte[] data);
+        protected abstract object getExternalSound(string filepath);
+        protected abstract object getSystemSound(string filepath);
+
 
         // TODO: This logic needs refactoring when things are fleshed out
         public KnyttArea getArea(KnyttPoint coords)

@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JuniPowers.cs" />
     <Compile Include="KnyttBinWorldLoader.cs" />
     <Compile Include="KnyttSave.cs" />
     <Compile Include="KnyttArea.cs" />

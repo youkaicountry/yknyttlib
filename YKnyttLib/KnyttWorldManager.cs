@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace YKnyttLib
 {
@@ -17,6 +18,26 @@ namespace YKnyttLib
             }
         }
 
+        public List<WorldEntry> Filtered 
+        { 
+            get
+            {
+                var result = new List<WorldEntry>();
+
+                foreach (var entry in Entries)
+                {
+                    if (!checkEntry(entry)) { continue; }
+                    result.Add(entry);
+                }
+
+                return result;
+            }
+        }
+
+        private string category;
+        private string difficulty;
+        private string size;
+
         List<WorldEntry> Entries { get; }
 
         public KnyttWorldManager()
@@ -26,28 +47,33 @@ namespace YKnyttLib
 
         // TODO: Add indexing by categories
 
-        public void addWorld(KnyttWorld world, T extra_data)
+        public bool addWorld(KnyttWorld world, T extra_data)
         {
-            if (world.Info == null) { throw new SystemException("Must load world config first."); }
-
-            this.Entries.Add(new WorldEntry(world, extra_data));
+            return this.addWorld(new WorldEntry(world, extra_data));
         }
 
-        // TODO: O(n), we can do better by keeping indices as worlds are added
-        public List<WorldEntry> filter(string category, string difficulty, string size)
+        public bool addWorld(WorldEntry entry)
         {
-            var result = new List<WorldEntry>();
+            if (entry.world.Info == null) { throw new SystemException("Must load world config first."); }
 
-            foreach(var entry in Entries)
-            {
-                var info = entry.world.Info;
-                if (category != null && !info.Categories.Contains(category)) { continue; }
-                if (difficulty != null && !info.Difficulties.Contains(difficulty)) { continue; }
-                if (size != null && !info.Size.Equals(size)) { continue; }
-                result.Add(entry);
-            }
+            this.Entries.Add(entry);
+            return checkEntry(entry);
+        }
 
-            return result;
+        public void setFilter(string category, string difficulty, string size)
+        {
+            this.category = category;
+            this.difficulty = difficulty;
+            this.size = size;
+        }
+
+        public bool checkEntry(WorldEntry entry)
+        {
+            var info = entry.world.Info;
+            if (category != null && !info.Categories.Contains(category)) { return false; }
+            if (difficulty != null && !info.Difficulties.Contains(difficulty)) { return false; }
+            if (size != null && !info.Size.Equals(size)) { return false; }
+            return true;
         }
     }
 }

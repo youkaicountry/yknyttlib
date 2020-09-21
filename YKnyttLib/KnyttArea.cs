@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using IniParser.Model;
+using System.IO;
 using System.Text;
 
 namespace YKnyttLib
@@ -24,10 +25,12 @@ namespace YKnyttLib
 
         public int Background { get; protected set; }
 
+        protected KeyDataCollection ExtraData { get; set; }
+
         public bool Empty { get; private set; }
 
         public TileLayer[] TileLayers { get; protected set; }
-        public SpriteLayer[] SpriteLayers { get; protected set; }
+        public ObjectLayer[] ObjectLayers { get; protected set; }
 
         public struct TileLayer
         {
@@ -44,25 +47,31 @@ namespace YKnyttLib
             }
         }
 
-        public struct SpriteLayer
+        public struct ObjectLayer
         {
             public byte[] hi;
             public byte[] lo;
 
-            public SpriteLayer(byte[] hi, byte[] lo)
+            public ObjectLayer(byte[] hi, byte[] lo)
             {
                 this.hi = hi;
                 this.lo = lo;
             }
 
-            public byte getSpriteHi(int x, int y)
+            public byte getObjectHi(int x, int y)
             {
                 return this.hi[y * AREA_WIDTH + x];
             }
 
-            public byte getSpriteLo(int x, int y)
+            public byte getObjectLo(int x, int y)
             {
                 return this.lo[y * AREA_WIDTH + x];
+            }
+
+            public KnyttPoint getObjectID(int x, int y)
+            {
+                int index = y * AREA_WIDTH + x;
+                return new KnyttPoint(this.lo[index], this.hi[index]);
             }
         }
 
@@ -71,6 +80,7 @@ namespace YKnyttLib
         {
             this.World = world;
             this.loadFromStream(map);
+            this.fetchAreaExtraData();
         }
 
         public KnyttArea(KnyttPoint position, KnyttWorld world)
@@ -78,6 +88,21 @@ namespace YKnyttLib
             this.World = world;
             this.Empty = true;
             this.Position = position;
+            this.fetchAreaExtraData();
+        }
+
+        private void fetchAreaExtraData()
+        {
+            string index = string.Format("x{0}y{1}", Position.x, Position.y);
+            if (!this.World.INIData.Sections.ContainsSection(index)) { return; }
+            this.ExtraData = World.INIData[index];
+        }
+
+        public string getExtraData(string key)
+        {
+            if (ExtraData == null) { return null; }
+            if (!ExtraData.ContainsKey(key)) { return null; }
+            return ExtraData[key];
         }
 
         private void loadFromStream(Stream map)
@@ -125,13 +150,13 @@ namespace YKnyttLib
 
         private void parseSpriteLayers(Stream map)
         {
-            this.SpriteLayers = new SpriteLayer[AREA_SPRITE_LAYERS];
+            this.ObjectLayers = new ObjectLayer[AREA_SPRITE_LAYERS];
 
             for (int i = 0; i < AREA_SPRITE_LAYERS; i++)
             {
                 byte[] hi = parseByteArray(map, AREA_WIDTH * AREA_HEIGHT);
                 byte[] lo = parseByteArray(map, AREA_WIDTH * AREA_HEIGHT);
-                this.SpriteLayers[i] = new SpriteLayer(hi, lo);
+                this.ObjectLayers[i] = new ObjectLayer(hi, lo);
             }
         }
 

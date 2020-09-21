@@ -22,6 +22,8 @@ namespace YKnyttLib
         /// </summary>
         public string RootDirectory { get; private set; }
 
+        public KnyttBinWorldLoader(byte[] data) : this(new MemoryStream(data)) { }
+
         /// <summary>
         /// 
         /// </summary>

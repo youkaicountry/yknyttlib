@@ -53,6 +53,12 @@ namespace YKnyttLib
             data["Positions"]["Y Pos"] = location.y.ToString();
         }
 
+        public void setWorldDirectory(string dir)
+        {
+            if (!data.Sections.ContainsSection("World")) { data.Sections.AddSection("World"); }
+            data["World"]["World Folder"] = dir;
+        }
+
         public override string ToString()
         {
             return data.ToString();
