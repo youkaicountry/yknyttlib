@@ -1,9 +1,65 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Security.Cryptography;
+using YKnyttLib;
+using YUtil.BinaryTools.Base58;
 
 namespace YKnyttLibConsole
 {
+    class TestKnyttWorld : KnyttWorld
+    {
+        protected override object bytesToSound(byte[] data)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override object bytesToTexture(byte[] data)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override bool externalFileExists(string filepath)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override object getExternalSound(string filepath)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override object getExternalTexture(string filepath)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override byte[] getExternalWorldData(string filepath)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override object getSystemSound(string filepath)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override object getSystemTexture(string filepath)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override byte[] getSystemWorldData(string filepath)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     class Program
     {
+        public static readonly byte[] KEY = new byte[] { 5, 127, 216, 221, 151, 80, 239, 69, 153, 45, 117, 118, 209, 205, 224, 104 };
+        public static readonly byte[] IV = new byte[] { 155, 92, 91, 252, 250, 25, 67, 146, 189, 240, 118, 253, 87, 191, 227, 161 };
+
         static void Main(string[] args)
         {
             /*KnyttWorld world = new KnyttWorld();
@@ -47,7 +103,67 @@ namespace YKnyttLibConsole
                 Console.WriteLine(fname);
             }*/
 
+            KnyttWorld world = new TestKnyttWorld();
+            string world_ini = File.ReadAllText("Nifflas - The Machine/World.ini");
+            world.loadWorldConfig(world_ini);
+            world.setDirectory("...", "Nifflas - Tutocdd2342342131235rial");
+
+            KnyttSave save = new KnyttSave(world);
+            save.setArea(new KnyttPoint(1007, 990));
+            save.setAreaPosition(new KnyttPoint(12, 7));
+            save.setPower(1, true);
+            save.setPower(2, true);
+            save.setPower(3, true);
+            save.setPower(11, true);
+            save.setFlag(3, true);
+
+            Console.WriteLine(save);
+
+            var password = save.ToPassword();
+            Console.WriteLine(password);
+
+            var save2 = KnyttSave.FromPassword(world, password);
+            Console.WriteLine(save2);
+
             Console.ReadKey();
+        }
+
+        private static byte[] EncryptBytes(IEnumerable<byte> bytes)
+        {
+            //The ICryptoTransform is created for each call to this method as the MSDN documentation indicates that the public methods may not be thread-safe and so we cannot hold a static reference to an instance
+            using (var r = Rijndael.Create())
+            {
+                using (var encryptor = r.CreateEncryptor(KEY, IV))
+                {
+                    return Transform(bytes, encryptor);
+                }
+            }
+        }
+
+        private static byte[] DecryptBytes(IEnumerable<byte> bytes)
+        {
+            //The ICryptoTransform is created for each call to this method as the MSDN documentation indicates that the public methods may not be thread-safe and so we cannot hold a static reference to an instance
+            using (var r = Rijndael.Create())
+            {
+                using (var decryptor = r.CreateDecryptor(KEY, IV))
+                {
+                    return Transform(bytes, decryptor);
+                }
+            }
+        }
+
+        private static byte[] Transform(IEnumerable<byte> bytes, ICryptoTransform transform)
+        {
+            using (var stream = new MemoryStream())
+            {
+                using (var cryptoStream = new CryptoStream(stream, transform, CryptoStreamMode.Write))
+                {
+                    foreach (var b in bytes)
+                        cryptoStream.WriteByte(b);
+                }
+
+                return stream.ToArray();
+            }
         }
     }
 }

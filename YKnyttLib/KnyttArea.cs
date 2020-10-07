@@ -25,12 +25,14 @@ namespace YKnyttLib
 
         public int Background { get; protected set; }
 
-        protected KeyDataCollection ExtraData { get; set; }
+        public KeyDataCollection ExtraData { get; set; }
 
         public bool Empty { get; private set; }
 
         public TileLayer[] TileLayers { get; protected set; }
         public ObjectLayer[] ObjectLayers { get; protected set; }
+
+        public KnyttWarp Warp { get; protected set; }
 
         public struct TileLayer
         {
@@ -78,6 +80,7 @@ namespace YKnyttLib
         // Reads the next area in the map stream
         public KnyttArea(Stream map, KnyttWorld world)
         {
+            Warp = new KnyttWarp(this);
             this.World = world;
             this.loadFromStream(map);
             this.fetchAreaExtraData();
@@ -85,6 +88,7 @@ namespace YKnyttLib
 
         public KnyttArea(KnyttPoint position, KnyttWorld world)
         {
+            Warp = new KnyttWarp(this);
             this.World = world;
             this.Empty = true;
             this.Position = position;

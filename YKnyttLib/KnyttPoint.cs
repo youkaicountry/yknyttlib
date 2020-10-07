@@ -10,6 +10,8 @@ namespace YKnyttLib
             get { return x * y; }
         }
 
+        public static KnyttPoint Zero { get { return new KnyttPoint(0, 0); } }
+
         public KnyttPoint(int x, int y)
         {
             this.x = x;

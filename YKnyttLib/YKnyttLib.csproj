@@ -41,10 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JuniPowers.cs" />
+    <Compile Include="JuniValues.cs" />
     <Compile Include="KnyttBinWorldLoader.cs" />
     <Compile Include="KnyttSave.cs" />
     <Compile Include="KnyttArea.cs" />
+    <Compile Include="KnyttWarp.cs" />
     <Compile Include="KnyttWorldManager.cs" />
     <Compile Include="Paging\KnyttPagingPolicy.cs" />
     <Compile Include="KnyttPoint.cs" />
@@ -52,12 +53,20 @@
     <Compile Include="KnyttWorld.cs" />
     <Compile Include="KnyttWorldInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="KnyttShift.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\YUtil\YUtil.BinaryTools\YUtil.BinaryTools.csproj">
+      <Project>{a9fa2ec5-426a-4be9-a027-30127b3bb157}</Project>
+      <Name>YUtil.BinaryTools</Name>
+    </ProjectReference>
     <ProjectReference Include="..\IniFileParser\INIFileParser.csproj">
       <Project>{5e46dcf4-c473-4171-9f9b-f3910b5ec407}</Project>
       <Name>INIFileParser</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
