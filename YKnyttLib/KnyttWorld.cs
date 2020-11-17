@@ -58,6 +58,9 @@ namespace YKnyttLib
         public void loadWorldConfig(string world_ini)
         {
             var parser = new IniDataParser();
+            parser.Configuration.AllowDuplicateKeys = true;
+            parser.Configuration.AllowDuplicateSections = true;
+            parser.Configuration.SkipInvalidLines = true;
             this.INIData = parser.Parse(world_ini);
             this.Info = new KnyttWorldInfo(INIData["World"]);
         }
