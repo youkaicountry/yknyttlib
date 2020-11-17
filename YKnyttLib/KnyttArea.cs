@@ -1,6 +1,7 @@
 ﻿using IniParser.Model;
 using System.IO;
 using System.Text;
+using System;
 
 namespace YKnyttLib
 {
@@ -33,6 +34,17 @@ namespace YKnyttLib
         public ObjectLayer[] ObjectLayers { get; protected set; }
 
         public KnyttWarp Warp { get; protected set; }
+        
+        public FlagWarp[] FlagWarps { get; protected set; } = new FlagWarp[3];
+
+        public enum FlagWarpID { A, B, C }
+
+        public class FlagWarp
+        {
+            public JuniValues.Flag flag;
+            public int x;
+            public int y;
+        }
 
         public struct TileLayer
         {
@@ -84,6 +96,7 @@ namespace YKnyttLib
             this.World = world;
             this.loadFromStream(map);
             this.fetchAreaExtraData();
+            this.fetchFlagWarpData();
         }
 
         public KnyttArea(KnyttPoint position, KnyttWorld world)
@@ -93,6 +106,7 @@ namespace YKnyttLib
             this.Empty = true;
             this.Position = position;
             this.fetchAreaExtraData();
+            this.fetchFlagWarpData();
         }
 
         private void fetchAreaExtraData()
@@ -107,6 +121,25 @@ namespace YKnyttLib
             if (ExtraData == null) { return null; }
             if (!ExtraData.ContainsKey(key)) { return null; }
             return ExtraData[key];
+        }
+
+        private void fetchFlagWarpData()
+        {
+            if (ExtraData == null) { return; }
+            foreach (var id in Enum.GetValues(typeof(FlagWarpID)))
+            {
+                var flag_key = $"Flag({id})";
+                if (ExtraData.ContainsKey(flag_key))
+                {
+                    var x_key = $"FlagWarpX({id})";
+                    var y_key = $"FlagWarpY({id})";
+
+                    FlagWarps[(int)id] = new FlagWarp();
+                    FlagWarps[(int)id].flag = JuniValues.Flag.Parse(ExtraData[flag_key]);
+                    FlagWarps[(int)id].x = ExtraData.ContainsKey(x_key) && int.TryParse(ExtraData[x_key], out var x) ? x : 0;
+                    FlagWarps[(int)id].y = ExtraData.ContainsKey(y_key) && int.TryParse(ExtraData[y_key], out var y) ? y : 0;
+                }
+            }
         }
 
         private void loadFromStream(Stream map)
