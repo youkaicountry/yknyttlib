@@ -58,6 +58,9 @@ namespace YKnyttLib
         public void loadWorldConfig(string world_ini)
         {
             var parser = new IniDataParser();
+            parser.Configuration.AllowDuplicateKeys = true;
+            parser.Configuration.AllowDuplicateSections = true;
+            parser.Configuration.SkipInvalidLines = true;
             this.INIData = parser.Parse(world_ini);
             this.Info = new KnyttWorldInfo(INIData["World"]);
         }
@@ -168,14 +171,10 @@ namespace YKnyttLib
         // TODO: This logic needs refactoring when things are fleshed out
         public KnyttArea getArea(KnyttPoint coords)
         {
-            // If outside of bounds, return null
-            if (coords.x < MinBounds.x || coords.x > MaxBounds.x || coords.y < MinBounds.y || coords.y > MaxBounds.y) { return null; }
-
-            var i = getMapIndex(coords);
-
+            bool out_of_bounds = coords.x < MinBounds.x || coords.x > MaxBounds.x || coords.y < MinBounds.y || coords.y > MaxBounds.y;
+            var area = out_of_bounds ? null : this.Map[getMapIndex(coords)];
             // If there is no area stored at the location, create and return an empty area
-            if (this.Map[i] == null) { return new KnyttArea(coords, this); }
-            return this.Map[getMapIndex(coords)];
+            return area ?? new KnyttArea(coords, this);
         }
 
         public int getMapIndex(KnyttPoint coords)

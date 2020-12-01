@@ -1,5 +1,4 @@
 ﻿using IniParser.Model;
-using System.Dynamic;
 
 namespace YKnyttLib
 {
@@ -33,8 +32,8 @@ namespace YKnyttLib
         public string Sound { get; private set; }
         public string Cutscene { get; private set; }
         public bool StopMusic { get; private set; }
-        public int FlagOn { get; private set; }
-        public int FlagOff { get; private set; }
+        public JuniValues.Flag FlagOn { get; private set; }
+        public JuniValues.Flag FlagOff { get; private set; }
 
         public bool AbsoluteTarget { get; set; }
 
@@ -52,7 +51,19 @@ namespace YKnyttLib
             set { if (AbsoluteTarget) { AbsoluteArea = value; } else { RelativeArea = value; }  }
         }
 
-        public KnyttPoint AbsolutePosition { get; set; }
+        private int positiveMod(int x, int m) { return (x % m + m) % m; }
+        private int floorDiv(int x, int m) { return (x - positiveMod(x, m)) / m; }
+
+        private KnyttPoint _absolute_position;
+        public KnyttPoint AbsolutePosition
+        { 
+            get { return _absolute_position; }
+            set
+            {
+                AbsoluteArea += new KnyttPoint(floorDiv(value.x, KnyttArea.AREA_WIDTH), floorDiv(value.y, KnyttArea.AREA_HEIGHT));
+                _absolute_position = new KnyttPoint(positiveMod(value.x, KnyttArea.AREA_WIDTH), positiveMod(value.y, KnyttArea.AREA_HEIGHT));
+            }
+        }
 
         public KnyttPoint RelativePosition
         {
@@ -97,8 +108,8 @@ namespace YKnyttLib
             StopMusic = getBoolINIValue(data, "StopMusic", false);
             Sound = getStringINIValue(data, "Sound");
             Cutscene = getStringINIValue(data, "Cutscene");
-            FlagOn = getIntINIValue(data, "FlagOn", -1);
-            FlagOff = getIntINIValue(data, "FlagOff", -1);
+            FlagOn = JuniValues.Flag.Parse(getStringINIValue(data, "FlagOn"));
+            FlagOff = JuniValues.Flag.Parse(getStringINIValue(data, "FlagOff"));
         }
 
         private bool getBoolINIValue(KeyDataCollection data, string name, bool @default = false)

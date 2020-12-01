@@ -21,6 +21,21 @@
         public bool[] Powers { get; }
         public bool[] Flags { get; }
 
+        public class Flag
+        {
+            public bool power;
+            public int number;
+
+            public static Flag Parse(string str)
+            {
+                if (str == null) { return null; }
+                Flag flag = new Flag();
+                flag.power = str.StartsWith("Power");
+                if (!int.TryParse(flag.power ? str.Substring(5) : str, out flag.number)) { return null; }
+                return flag;
+            }
+        }
+
         public JuniValues()
         {
             Powers = new bool[12];
@@ -40,6 +55,11 @@
 
         public void setFlag(int index, bool val) { Flags[index] = val; }
         public bool getFlag(int index) { return Flags[index]; }
+
+        public bool check(Flag flag)
+        {
+            return flag.power ? Powers[flag.number] : Flags[flag.number];
+        }
 
         public void writeToSave(KnyttSave save)
         {
