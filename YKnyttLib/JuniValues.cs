@@ -1,4 +1,6 @@
-﻿namespace YKnyttLib
+﻿using System.Linq;
+
+namespace YKnyttLib
 {
     public class JuniValues
     {
@@ -15,11 +17,14 @@
             RedKey = 8,
             YellowKey = 9,
             BlueKey = 10,
-            PurpleKey = 11
+            PurpleKey = 11,
+            Map = 12
         }
 
         public bool[] Powers { get; }
         public bool[] Flags { get; }
+        public bool[] Collectables { get; }
+        public int CoinsSpent { get; set; }
 
         public class Flag
         {
@@ -38,8 +43,9 @@
 
         public JuniValues()
         {
-            Powers = new bool[12];
+            Powers = new bool[13];
             Flags = new bool[10];
+            Collectables = new bool[200];
         }
 
         public JuniValues(KnyttSave save) : this()
@@ -61,16 +67,25 @@
             return flag.power ? Powers[flag.number] : Flags[flag.number];
         }
 
+        public void setCollectable(int index, bool val) { Collectables[index] = val; }
+        public bool getCollectable(int index) { return Collectables[index]; }
+
+        public int getCreaturesCount() { return Collectables.Skip(1).Take(50).Where(a => a).Count(); }
+        public int getCoinCount() { return Collectables.Skip(51).Take(100).Where(a => a).Count() - CoinsSpent; }
+        public int getArtifactsCount() { return Collectables.Skip(151).Take(49).Where(a => a).Count(); }
+
         public void writeToSave(KnyttSave save)
         {
             for (int i = 0; i < Powers.Length; i++) { save.setPower(i, Powers[i]); }
             for (int i = 0; i < Flags.Length; i++) { save.setFlag(i, Flags[i]); }
+            save.setCollectables(Collectables, CoinsSpent);
         }
 
         public void readFromSave(KnyttSave save)
         {
             for (int i = 0; i < Powers.Length; i++) { Powers[i] = save.getPower(i); }
             for (int i = 0; i < Flags.Length; i++) { Flags[i] = save.getFlag(i); }
+            save.fillCollectables(Collectables);
         }
     }
 }

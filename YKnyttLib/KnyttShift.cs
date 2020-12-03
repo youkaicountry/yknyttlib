@@ -34,6 +34,7 @@ namespace YKnyttLib
         public bool StopMusic { get; private set; }
         public JuniValues.Flag FlagOn { get; private set; }
         public JuniValues.Flag FlagOff { get; private set; }
+        public int Coin { get; private set; }
 
         public bool AbsoluteTarget { get; set; }
 
@@ -110,6 +111,7 @@ namespace YKnyttLib
             Cutscene = getStringINIValue(data, "Cutscene");
             FlagOn = JuniValues.Flag.Parse(getStringINIValue(data, "FlagOn"));
             FlagOff = JuniValues.Flag.Parse(getStringINIValue(data, "FlagOff"));
+            Coin = getIntINIValue(data, "Coin");
         }
 
         private bool getBoolINIValue(KeyDataCollection data, string name, bool @default = false)

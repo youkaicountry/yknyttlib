@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using YUtil.BinaryTools;
 using YUtil.BinaryTools.Base58;
+using System.Linq;
 
 namespace YKnyttLib
 {
@@ -60,6 +61,45 @@ namespace YKnyttLib
         {
             var fresult = getValue("Flags", string.Format("Flag{0}", flag_id));
             return fresult == null ? false : (int.Parse(fresult) == 0 ? false : true);
+        }
+
+        private readonly string[] keyNames = {"Creatures 1", "Creatures 2", "Coins 1", "Coins 2", "Coins 3", "Coins 4", "Artifacts 1", "Artifacts 2"};
+
+        public void setCollectables(bool[] collection, int coinsSpent)
+        {
+            int[] packed = new int[keyNames.Length];
+            for (int i = 0; i < collection.Length - 1; i++)
+            {
+                packed[i / 25] |= (collection[i + 1] ? 1 : 0) << (i % 25);
+            }
+            packed[6] |= (packed[7] & 0b111) << 25;
+            packed[7] >>= 3;
+            for (int i = 0; i < keyNames.Length; i++)
+            {
+                setValue("Extras", keyNames[i], packed[i].ToString());
+            }
+            // TODO: duplicate code with JuniValues
+            setValue("Extras", "Creature Count", collection.Skip(1).Take(50).Where(a => a).Count().ToString());
+            setValue("Extras", "Coin Count", (collection.Skip(51).Take(100).Where(a => a).Count() - coinsSpent).ToString());
+            setValue("Extras", "Coins Spent", coinsSpent.ToString());
+            for (int i = 0; i < 7; i++)
+            {
+                setValue("Extras", $"Artifact Count {i+1}", collection.Skip(151 + i * 7).Take(7).Where(a => a).Count().ToString());
+            }
+        }
+
+        public void fillCollectables(bool[] collection)
+        {
+            int pos = 0;
+            int[] capacity = {25, 25, 25, 25, 25, 25, 28, 21};
+            for (int i = 0; i < keyNames.Length; i++)
+            {
+                int packed = int.Parse(getValue("Extras", keyNames[i]) ?? "0");
+                for (int j = 0; j < capacity[i]; j++)
+                {
+                    collection[++pos] = (packed & (1 << j)) != 0;
+                }
+            }
         }
 
         public KnyttPoint getArea()
