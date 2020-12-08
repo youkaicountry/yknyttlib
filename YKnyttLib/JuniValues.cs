@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Collections.Generic;
 
 namespace YKnyttLib
 {
@@ -23,8 +24,9 @@ namespace YKnyttLib
 
         public bool[] Powers { get; }
         public bool[] Flags { get; }
-        public bool[] Collectables { get; }
+        public bool[] Collectables { get; private set; }
         public int CoinsSpent { get; set; }
+        public HashSet<KnyttPoint> VisitedAreas { get; private set; }
 
         public class Flag
         {
@@ -46,6 +48,7 @@ namespace YKnyttLib
             Powers = new bool[13];
             Flags = new bool[10];
             Collectables = new bool[200];
+            VisitedAreas = new HashSet<KnyttPoint>();
         }
 
         public JuniValues(KnyttSave save) : this()
@@ -79,13 +82,15 @@ namespace YKnyttLib
             for (int i = 0; i < Powers.Length; i++) { save.setPower(i, Powers[i]); }
             for (int i = 0; i < Flags.Length; i++) { save.setFlag(i, Flags[i]); }
             save.setCollectables(Collectables, CoinsSpent);
+            save.setVisitedAreas(VisitedAreas);
         }
 
         public void readFromSave(KnyttSave save)
         {
             for (int i = 0; i < Powers.Length; i++) { Powers[i] = save.getPower(i); }
             for (int i = 0; i < Flags.Length; i++) { Flags[i] = save.getFlag(i); }
-            save.fillCollectables(Collectables);
+            (Collectables, CoinsSpent) = save.getCollectables();
+            VisitedAreas = save.getVisitedAreas();
         }
     }
 }

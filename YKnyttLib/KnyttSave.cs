@@ -1,6 +1,7 @@
 ﻿using IniParser.Model;
 using IniParser.Parser;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
@@ -88,8 +89,9 @@ namespace YKnyttLib
             }
         }
 
-        public void fillCollectables(bool[] collection)
+        public (bool[], int) getCollectables()
         {
+            bool[] collection = new bool[200];
             int pos = 0;
             int[] capacity = {25, 25, 25, 25, 25, 25, 28, 21};
             for (int i = 0; i < keyNames.Length; i++)
@@ -100,6 +102,44 @@ namespace YKnyttLib
                     collection[++pos] = (packed & (1 << j)) != 0;
                 }
             }
+            int coins_spent = int.TryParse(getValue("Extras", "Coins Spent"), out var c) ? c : 0;
+            return (collection, coins_spent);
+        }
+
+        public void setVisitedAreas(HashSet<KnyttPoint> visited)
+        {
+            if (visited.Count == 0) { return; }
+
+            int size = World.Size.Area;
+            int width = World.Size.x;
+            var bits = new BitArray(size, false);
+            foreach (var p in visited)
+            {
+                bits[(p.y - World.MinBounds.y) * width + (p.x - World.MinBounds.x)] = true;
+            }
+            Int32[] packed = new Int32[(size - 1) / 32 + 1];
+            bits.CopyTo(packed, 0);
+            setValue("Extras", "Visited Areas", String.Join(",", packed));
+        }
+
+        public HashSet<KnyttPoint> getVisitedAreas()
+        {
+            int width = World.Size.x;
+            var visited = new HashSet<KnyttPoint>();
+
+            var visited_save = getValue("Extras", "Visited Areas");
+            if (visited_save == null) { return visited; }
+            
+            Int32[] packed = visited_save.Split(',').Select(v => int.Parse(v)).ToArray();
+            var bits = new BitArray(packed);
+            for (int i = 0; i < bits.Count; i++)
+            {
+                if (bits[i])
+                {
+                    visited.Add(new KnyttPoint(i % width + World.MinBounds.x, i / width + World.MinBounds.y));
+                }
+            }
+            return visited;
         }
 
         public KnyttPoint getArea()
