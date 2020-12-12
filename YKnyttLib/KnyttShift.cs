@@ -2,41 +2,16 @@
 
 namespace YKnyttLib
 {
-    public class KnyttShift
+    public class KnyttShift : KnyttSwitch
     {
-        public enum ShiftID
-        {
-            A = 0,
-            B = 1,
-            C = 2
-        }
-
-        public enum ShiftShape
-        {
-            SPOT = 0,
-            FLOOR = 1,
-            CIRCLE = 2,
-            SQUARE = 3
-        }
-
         public KnyttPoint AreaPos { get; }
-        public KnyttPoint ShiftPos { get; }
-        public ShiftID ID { get; }
-        public ShiftShape Shape { get; private set; }
-        public bool Visible { get; private set; }
         public bool Save { get; private set; }
-        public bool Effect { get; private set; }
-        public bool OnTouch { get; private set; }
-        public bool DenyHologram { get; private set; }
         public bool Quantize { get; private set; }
-        public string Sound { get; private set; }
         public string Cutscene { get; private set; }
         public bool StopMusic { get; private set; }
         public JuniValues.Flag FlagOn { get; private set; }
         public JuniValues.Flag FlagOff { get; private set; }
         public int Coin { get; private set; }
-
-        public bool AbsoluteTarget { get; set; }
 
         public KnyttPoint AbsoluteArea { get; set; }
 
@@ -56,84 +31,47 @@ namespace YKnyttLib
         private int floorDiv(int x, int m) { return (x - positiveMod(x, m)) / m; }
 
         private KnyttPoint _absolute_position;
-        public KnyttPoint AbsolutePosition
-        { 
+        public override KnyttPoint AbsolutePosition
+        {
             get { return _absolute_position; }
-            set
+            protected set
             {
                 AbsoluteArea += new KnyttPoint(floorDiv(value.x, KnyttArea.AREA_WIDTH), floorDiv(value.y, KnyttArea.AREA_HEIGHT));
                 _absolute_position = new KnyttPoint(positiveMod(value.x, KnyttArea.AREA_WIDTH), positiveMod(value.y, KnyttArea.AREA_HEIGHT));
             }
         }
 
-        public KnyttPoint RelativePosition
-        {
-            get { return AbsolutePosition - ShiftPos; }
-            set { AbsolutePosition = ShiftPos + value; }
-        }
-
-        public KnyttPoint FormattedPosition
-        {
-            get { return AbsoluteTarget ? AbsolutePosition : RelativePosition; }
-            set { if (AbsoluteTarget) { AbsolutePosition = value; } else { RelativePosition = value; } }
-        }
-
-        public KnyttShift(KnyttPoint area_pos, KnyttPoint shift_pos, ShiftID id)
+        public KnyttShift(KnyttPoint area_pos, KnyttPoint shift_pos, SwitchID id)
         {
             AreaPos = area_pos;
-            ShiftPos = shift_pos;
+            Pos = shift_pos;
             ID = id;
             AbsoluteTarget = false; // Relative by default
+            AsOne = true;
+            Repeat = true;
+            prefix = "Shift";
         }
 
-        public KnyttShift(KnyttPoint area_pos, KnyttPoint shift_pos, ShiftID id, KeyDataCollection data) : this(area_pos, shift_pos, id)
+        public KnyttShift(KnyttPoint area_pos, KnyttPoint shift_pos, SwitchID id, KeyDataCollection data) : this(area_pos, shift_pos, id)
         {
             loadFromINI(data);
         }
 
-        public KnyttShift(KnyttArea area, KnyttPoint shift_pos, ShiftID id) : this(area.Position, shift_pos, id, area.ExtraData) { }
+        public KnyttShift(KnyttArea area, KnyttPoint shift_pos, SwitchID id) : this(area.Position, shift_pos, id, area.ExtraData) { }
 
-        private void loadFromINI(KeyDataCollection data)
+        protected override void loadFromINI(KeyDataCollection data)
         {
-            AbsoluteTarget = getBoolINIValue(data, "AbsoluteTarget");
+            base.loadFromINI(data);
             FormattedArea = new KnyttPoint(getIntINIValue(data, "XMap"), getIntINIValue(data, "YMap"));
             FormattedPosition = new KnyttPoint(getIntINIValue(data, "XPos"), getIntINIValue(data, "YPos"));
             Save = getBoolINIValue(data, "Save", false);
-            Effect = getBoolINIValue(data, "Effect", true);
             StopMusic = getBoolINIValue(data, "StopMusic", true);
-            Visible = getBoolINIValue(data, "Visible", true);
-            OnTouch = getBoolINIValue(data, "Touch", false);
-            DenyHologram = getBoolINIValue(data, "DenyHologram", false);
             Quantize = getBoolINIValue(data, "Quantize", true);
-            Shape = (ShiftShape)getIntINIValue(data, "Type");
             StopMusic = getBoolINIValue(data, "StopMusic", false);
-            Sound = getStringINIValue(data, "Sound");
             Cutscene = getStringINIValue(data, "Cutscene");
             FlagOn = JuniValues.Flag.Parse(getStringINIValue(data, "FlagOn"));
             FlagOff = JuniValues.Flag.Parse(getStringINIValue(data, "FlagOff"));
             Coin = getIntINIValue(data, "Coin");
-        }
-
-        private bool getBoolINIValue(KeyDataCollection data, string name, bool @default = false)
-        {
-            string value = getStringINIValue(data, name);
-            if (value == null) { return @default; }
-            return value.Equals("True") ? true : false;
-        }
-
-        private int getIntINIValue(KeyDataCollection data, string name, int @default = 0)
-        {
-            string value = getStringINIValue(data, name);
-            if (value == null) { return @default; }
-            return int.Parse(value);
-        }
-
-        private string getStringINIValue(KeyDataCollection data, string name)
-        {
-            char letter = "ABC"[(int)ID];
-            string key = string.Format("Shift{0}({1})", name, letter);
-            if (!data.ContainsKey(key)) { return null; }
-            return data[key];
         }
     }
 }
