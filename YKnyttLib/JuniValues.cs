@@ -32,11 +32,13 @@ namespace YKnyttLib
         {
             public bool power;
             public int number;
+            public bool true_flag;
 
             public static Flag Parse(string str)
             {
                 if (str == null) { return null; }
                 Flag flag = new Flag();
+                if (str == "True") { flag.true_flag = true; return flag; }
                 flag.power = str.StartsWith("Power");
                 if (!int.TryParse(flag.power ? str.Substring(5) : str, out flag.number)) { return null; }
                 return flag;
@@ -67,7 +69,8 @@ namespace YKnyttLib
 
         public bool check(Flag flag)
         {
-            return flag.power ? Powers[flag.number] : Flags[flag.number];
+            return flag.true_flag ? true :
+                   flag.power ? Powers[flag.number] : Flags[flag.number];
         }
 
         public void setCollectable(int index, bool val) { Collectables[index] = val; }

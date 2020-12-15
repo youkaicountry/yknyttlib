@@ -35,9 +35,9 @@ namespace YKnyttLib
 
         public KnyttWarp Warp { get; protected set; }
         
-        public FlagWarp[] FlagWarps { get; protected set; } = new FlagWarp[3];
+        public FlagWarp[] FlagWarps { get; protected set; } = new FlagWarp[4];
 
-        public enum FlagWarpID { A, B, C }
+        public enum FlagWarpID { A, B, C, All }
 
         public class FlagWarp
         {
