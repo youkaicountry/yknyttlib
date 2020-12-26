@@ -28,6 +28,11 @@ namespace YKnyttLib
             return new KnyttPoint(Math.Max(point.x, x), Math.Max(point.y, y));
         }
 
+        public int manhattanDistance(KnyttPoint point)
+        {
+            return Math.Abs(point.x - x) + Math.Abs(point.y - y);
+        }
+
         public bool isZero() { return this.x == 0 && this.y == 0; }
 
         public static KnyttPoint operator +(KnyttPoint a, KnyttPoint b)
