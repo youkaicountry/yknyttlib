@@ -42,7 +42,7 @@ namespace YKnyttLib
         /// <returns></returns>
         public byte[] GetFile(string fileName)
         {
-            return !_files.ContainsKey(fileName) ? null : _files[fileName];
+            return !_files.ContainsKey(fileName.ToLower()) ? null : _files[fileName.ToLower()];
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace YKnyttLib
         /// <returns></returns>
         public int GetFileSize(string fileName)
         {
-            return !_files.ContainsKey(fileName) ? -1 : _files[fileName].Length;
+            return !_files.ContainsKey(fileName.ToLower()) ? -1 : _files[fileName.ToLower()].Length;
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace YKnyttLib
                     var fileSize = sizeData[0] + sizeData[1] * 256 + sizeData[2] * 65536 + sizeData[3] * 16777216;
 
                     //read and store the file.
-                    _files[filePath] = binaryReader.ReadBytes(fileSize);
+                    _files[filePath.ToLower()] = binaryReader.ReadBytes(fileSize);
                 }
             }
         }

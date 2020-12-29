@@ -92,7 +92,9 @@ namespace YKnyttLib
         {
             for (int i = 0; i < Powers.Length; i++) { Powers[i] = save.getPower(i); }
             for (int i = 0; i < Flags.Length; i++) { Flags[i] = save.getFlag(i); }
-            (Collectables, CoinsSpent) = save.getCollectables();
+            save.getCollectables(out var collectables, out var coins_spent);
+            this.Collectables = collectables;
+            this.CoinsSpent = coins_spent;
             VisitedAreas = save.getVisitedAreas();
         }
     }

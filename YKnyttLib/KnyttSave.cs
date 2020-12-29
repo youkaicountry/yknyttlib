@@ -89,9 +89,9 @@ namespace YKnyttLib
             }
         }
 
-        public (bool[], int) getCollectables()
+        public void getCollectables(out bool[] collection, out int coins_spent)
         {
-            bool[] collection = new bool[200];
+            collection = new bool[200];
             int pos = 0;
             int[] capacity = {25, 25, 25, 25, 25, 25, 28, 21};
             for (int i = 0; i < keyNames.Length; i++)
@@ -102,8 +102,8 @@ namespace YKnyttLib
                     collection[++pos] = (packed & (1 << j)) != 0;
                 }
             }
-            int coins_spent = int.TryParse(getValue("Extras", "Coins Spent"), out var c) ? c : 0;
-            return (collection, coins_spent);
+            coins_spent = int.TryParse(getValue("Extras", "Coins Spent"), out var c) ? c : 0;
+
         }
 
         public void setVisitedAreas(HashSet<KnyttPoint> visited)
