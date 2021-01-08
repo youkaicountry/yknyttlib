@@ -9,9 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YKnyttLibConsole", "YKnyttL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INIFileParser", "IniFileParser\INIFileParser.csproj", "{5E46DCF4-C473-4171-9F9B-F3910B5EC407}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YUtil.BinaryTools", "..\..\YUtil\YUtil.BinaryTools\YUtil.BinaryTools.csproj", "{A9FA2EC5-426A-4BE9-A027-30127B3BB157}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YUtil.Compression", "..\..\YUtil\YUtil.Compression\YUtil.Compression.csproj", "{211E5E7D-72B6-4386-8E5F-5E1A38858A77}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YUtil.BinaryTools", "YUtil.BinaryTools\YUtil.BinaryTools.csproj", "{A9FA2EC5-426A-4BE9-A027-30127B3BB157}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +33,6 @@ Global
 		{A9FA2EC5-426A-4BE9-A027-30127B3BB157}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9FA2EC5-426A-4BE9-A027-30127B3BB157}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9FA2EC5-426A-4BE9-A027-30127B3BB157}.Release|Any CPU.Build.0 = Release|Any CPU
-		{211E5E7D-72B6-4386-8E5F-5E1A38858A77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{211E5E7D-72B6-4386-8E5F-5E1A38858A77}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{211E5E7D-72B6-4386-8E5F-5E1A38858A77}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{211E5E7D-72B6-4386-8E5F-5E1A38858A77}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

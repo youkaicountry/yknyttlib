@@ -58,13 +58,13 @@
     <Compile Include="KnyttShift.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\YUtil\YUtil.BinaryTools\YUtil.BinaryTools.csproj">
-      <Project>{a9fa2ec5-426a-4be9-a027-30127b3bb157}</Project>
-      <Name>YUtil.BinaryTools</Name>
-    </ProjectReference>
     <ProjectReference Include="..\IniFileParser\INIFileParser.csproj">
       <Project>{5e46dcf4-c473-4171-9f9b-f3910b5ec407}</Project>
       <Name>INIFileParser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\YUtil.BinaryTools\YUtil.BinaryTools.csproj">
+      <Project>{a9fa2ec5-426a-4be9-a027-30127b3bb157}</Project>
+      <Name>YUtil.BinaryTools</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
