@@ -49,17 +49,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\YUtil\YUtil.BinaryTools\YUtil.BinaryTools.csproj">
-      <Project>{a9fa2ec5-426a-4be9-a027-30127b3bb157}</Project>
-      <Name>YUtil.BinaryTools</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\YUtil\YUtil.Compression\YUtil.Compression.csproj">
-      <Project>{211e5e7d-72b6-4386-8e5f-5e1a38858a77}</Project>
-      <Name>YUtil.Compression</Name>
-    </ProjectReference>
     <ProjectReference Include="..\YKnyttLib\YKnyttLib.csproj">
       <Project>{943e0270-0fe6-42d6-8a0f-219cc072ea02}</Project>
       <Name>YKnyttLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\YUtil.BinaryTools\YUtil.BinaryTools.csproj">
+      <Project>{a9fa2ec5-426a-4be9-a027-30127b3bb157}</Project>
+      <Name>YUtil.BinaryTools</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
