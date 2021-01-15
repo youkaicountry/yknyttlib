@@ -103,43 +103,51 @@ namespace YKnyttLib
                 }
             }
             coins_spent = int.TryParse(getValue("Extras", "Coins Spent"), out var c) ? c : 0;
-
         }
 
-        public void setVisitedAreas(HashSet<KnyttPoint> visited)
+        public HashSet<KnyttPoint> VisitedAreas
         {
-            if (visited.Count == 0) { return; }
-
-            int size = World.Size.Area;
-            int width = World.Size.x;
-            var bits = new BitArray(size, false);
-            foreach (var p in visited)
+            set
             {
-                bits[(p.y - World.MinBounds.y) * width + (p.x - World.MinBounds.x)] = true;
-            }
-            Int32[] packed = new Int32[(size - 1) / 32 + 1];
-            bits.CopyTo(packed, 0);
-            setValue("Extras", "Visited Areas", String.Join(",", packed));
-        }
+                if (value.Count == 0) { return; }
 
-        public HashSet<KnyttPoint> getVisitedAreas()
-        {
-            int width = World.Size.x;
-            var visited = new HashSet<KnyttPoint>();
-
-            var visited_save = getValue("Extras", "Visited Areas");
-            if (visited_save == null) { return visited; }
-            
-            Int32[] packed = visited_save.Split(',').Select(v => int.Parse(v)).ToArray();
-            var bits = new BitArray(packed);
-            for (int i = 0; i < bits.Count; i++)
-            {
-                if (bits[i])
+                int size = World.Size.Area;
+                int width = World.Size.x;
+                var bits = new BitArray(size, false);
+                foreach (var p in value)
                 {
-                    visited.Add(new KnyttPoint(i % width + World.MinBounds.x, i / width + World.MinBounds.y));
+                    bits[(p.y - World.MinBounds.y) * width + (p.x - World.MinBounds.x)] = true;
                 }
+                Int32[] packed = new Int32[(size - 1) / 32 + 1];
+                bits.CopyTo(packed, 0);
+                setValue("Extras", "Visited Areas", String.Join(",", packed));
             }
-            return visited;
+            
+            get
+            {
+                int width = World.Size.x;
+                var visited = new HashSet<KnyttPoint>();
+
+                var visited_save = getValue("Extras", "Visited Areas");
+                if (visited_save == null) { return visited; }
+                
+                Int32[] packed = visited_save.Split(',').Select(v => int.Parse(v)).ToArray();
+                var bits = new BitArray(packed);
+                for (int i = 0; i < bits.Count; i++)
+                {
+                    if (bits[i])
+                    {
+                        visited.Add(new KnyttPoint(i % width + World.MinBounds.x, i / width + World.MinBounds.y));
+                    }
+                }
+                return visited;
+            }
+        }
+
+        public string Attachment
+        {
+            get { return getValue("Extras", "Attach"); }
+            set { setValue("Extras", "Attach", value); }
         }
 
         public KnyttPoint getArea()

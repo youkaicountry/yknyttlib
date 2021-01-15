@@ -27,6 +27,7 @@ namespace YKnyttLib
         public bool[] Collectables { get; private set; }
         public int CoinsSpent { get; set; }
         public HashSet<KnyttPoint> VisitedAreas { get; private set; }
+        public string Attachment { get; set; }
 
         public class Flag
         {
@@ -85,7 +86,8 @@ namespace YKnyttLib
             for (int i = 0; i < Powers.Length; i++) { save.setPower(i, Powers[i]); }
             for (int i = 0; i < Flags.Length; i++) { save.setFlag(i, Flags[i]); }
             save.setCollectables(Collectables, CoinsSpent);
-            save.setVisitedAreas(VisitedAreas);
+            save.VisitedAreas = VisitedAreas;
+            save.Attachment = Attachment;
         }
 
         public void readFromSave(KnyttSave save)
@@ -95,7 +97,8 @@ namespace YKnyttLib
             save.getCollectables(out var collectables, out var coins_spent);
             this.Collectables = collectables;
             this.CoinsSpent = coins_spent;
-            VisitedAreas = save.getVisitedAreas();
+            VisitedAreas = save.VisitedAreas;
+            Attachment = save.Attachment;
         }
     }
 }
