@@ -174,9 +174,7 @@ namespace YKnyttLib
         public KnyttArea getArea(KnyttPoint coords)
         {
             bool out_of_bounds = coords.x < MinBounds.x || coords.x > MaxBounds.x || coords.y < MinBounds.y || coords.y > MaxBounds.y;
-            var area = out_of_bounds ? null : this.Map[getMapIndex(coords)];
-            // If there is no area stored at the location, create and return an empty area
-            return area ?? new KnyttArea(coords, this);
+            return out_of_bounds ? null : this.Map[getMapIndex(coords)];
         }
 
         public int getMapIndex(KnyttPoint coords)

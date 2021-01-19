@@ -61,7 +61,7 @@ namespace YKnyttLib
         {
             string value = getStringINIValue(data, name);
             if (value == null) { return @default; }
-            return value.Equals("True") ? true : false;
+            return value.ToLower().Equals("true") ? true : false;
         }
 
         protected int getIntINIValue(KeyDataCollection data, string name, int @default = 0)
