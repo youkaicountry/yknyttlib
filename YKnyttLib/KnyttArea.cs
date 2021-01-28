@@ -44,6 +44,8 @@ namespace YKnyttLib
             public JuniValues.Flag flag;
             public int x;
             public int y;
+            public bool xArtifactMode;
+            public bool yArtifactMode;
         }
 
         public struct TileLayer
@@ -136,8 +138,19 @@ namespace YKnyttLib
 
                     FlagWarps[(int)id] = new FlagWarp();
                     FlagWarps[(int)id].flag = JuniValues.Flag.Parse(ExtraData[flag_key]);
-                    FlagWarps[(int)id].x = ExtraData.ContainsKey(x_key) && int.TryParse(ExtraData[x_key], out var x) ? x : 0;
-                    FlagWarps[(int)id].y = ExtraData.ContainsKey(y_key) && int.TryParse(ExtraData[y_key], out var y) ? y : 0;
+                    
+                    int x, y;
+                    FlagWarps[(int)id].xArtifactMode = ExtraData.ContainsKey(x_key) && ExtraData[x_key].ToLower().StartsWith("artifact");
+                    FlagWarps[(int)id].x = !ExtraData.ContainsKey(x_key) ? 0 :
+                        FlagWarps[(int)id].xArtifactMode ? 
+                            (int.TryParse(ExtraData[x_key].Substring("artifact".Length), out x) ? x : 0) :
+                            (int.TryParse(ExtraData[x_key], out x) ? x : 0);
+
+                    FlagWarps[(int)id].yArtifactMode = ExtraData.ContainsKey(y_key) && ExtraData[y_key].ToLower().StartsWith("artifact");
+                    FlagWarps[(int)id].y = !ExtraData.ContainsKey(y_key) ? 0 :
+                        FlagWarps[(int)id].yArtifactMode ? 
+                            (int.TryParse(ExtraData[y_key].Substring("artifact".Length), out y) ? y : 0) :
+                            (int.TryParse(ExtraData[y_key], out y) ? y : 0);
                 }
             }
         }

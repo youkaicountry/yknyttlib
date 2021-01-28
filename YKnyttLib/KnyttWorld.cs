@@ -59,7 +59,7 @@ namespace YKnyttLib
         {
             var parser = new IniDataParser();
             parser.Configuration.AllowDuplicateKeys = true;
-            //parser.Configuration.OverrideDuplicateKeys = true; // Don't know what behaviour the original game has
+            parser.Configuration.OverrideDuplicateKeys = true;
             parser.Configuration.CaseInsensitive = true;
             parser.Configuration.AllowDuplicateSections = true;
             parser.Configuration.SkipInvalidLines = true;

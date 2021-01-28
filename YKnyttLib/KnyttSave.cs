@@ -131,6 +131,7 @@ namespace YKnyttLib
                 var visited_save = getValue("Extras", "Visited Areas");
                 if (visited_save == null) { return visited; }
                 
+                // TODO: slow for very large worlds. Use BitArray instead of HashSet<KnyttPoint> for property?
                 Int32[] packed = visited_save.Split(',').Select(v => int.Parse(v)).ToArray();
                 var bits = new BitArray(packed);
                 for (int i = 0; i < bits.Count; i++)

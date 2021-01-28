@@ -39,8 +39,8 @@ namespace YKnyttLib
             {
                 if (str == null) { return null; }
                 Flag flag = new Flag();
-                if (str == "True") { flag.true_flag = true; return flag; }
-                flag.power = str.StartsWith("Power");
+                if (str.ToLower() == "true") { flag.true_flag = true; return flag; }
+                flag.power = str.ToLower().StartsWith("power");
                 if (!int.TryParse(flag.power ? str.Substring(5) : str, out flag.number)) { return null; }
                 return flag;
             }
@@ -80,6 +80,7 @@ namespace YKnyttLib
         public int getCreaturesCount() { return Collectables.Skip(1).Take(50).Where(a => a).Count(); }
         public int getCoinCount() { return Collectables.Skip(51).Take(100).Where(a => a).Count() - CoinsSpent; }
         public int getArtifactsCount() { return Collectables.Skip(151).Take(49).Where(a => a).Count(); }
+        public int getArtifactsCount(int i) { return Collectables.Skip(151 + i * 7).Take(7).Where(a => a).Count(); }
 
         public void writeToSave(KnyttSave save)
         {
