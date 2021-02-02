@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
+using System;
 
 namespace YKnyttLib
 {
@@ -28,6 +29,8 @@ namespace YKnyttLib
         public int CoinsSpent { get; set; }
         public HashSet<KnyttPoint> VisitedAreas { get; private set; }
         public string Attachment { get; set; }
+        public HashSet<string> Cutscenes { get; private set; }
+        public HashSet<string> Endings { get; private set; }
 
         public class Flag
         {
@@ -52,6 +55,8 @@ namespace YKnyttLib
             Flags = new bool[10];
             Collectables = new bool[200];
             VisitedAreas = new HashSet<KnyttPoint>();
+            Cutscenes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            Endings = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         }
 
         public JuniValues(KnyttSave save) : this()
@@ -89,6 +94,8 @@ namespace YKnyttLib
             save.setCollectables(Collectables, CoinsSpent);
             save.VisitedAreas = VisitedAreas;
             save.Attachment = Attachment;
+            save.Cutscenes = Cutscenes;
+            save.Endings = Endings;
         }
 
         public void readFromSave(KnyttSave save)
@@ -96,10 +103,12 @@ namespace YKnyttLib
             for (int i = 0; i < Powers.Length; i++) { Powers[i] = save.getPower(i); }
             for (int i = 0; i < Flags.Length; i++) { Flags[i] = save.getFlag(i); }
             save.getCollectables(out var collectables, out var coins_spent);
-            this.Collectables = collectables;
-            this.CoinsSpent = coins_spent;
+            Collectables = collectables;
+            CoinsSpent = coins_spent;
             VisitedAreas = save.VisitedAreas;
             Attachment = save.Attachment;
+            Cutscenes = save.Cutscenes;
+            Endings = save.Endings;
         }
     }
 }

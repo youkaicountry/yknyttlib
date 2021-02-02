@@ -151,6 +151,18 @@ namespace YKnyttLib
             set { setValue("Extras", "Attach", value); }
         }
 
+        public HashSet<string> Cutscenes
+        {
+            get { return getValue("Extras", "Cutscenes")?.Split(',').ToHashSet() ?? new HashSet<string>(); }
+            set { setValue("Extras", "Cutscenes", String.Join(",", value)); }
+        }
+
+        public HashSet<string> Endings
+        {
+            get { return getValue("Extras", "Endings")?.Split(',').ToHashSet() ?? new HashSet<string>(); }
+            set { setValue("Extras", "Endings", String.Join(",", value)); }
+        }
+
         public KnyttPoint getArea()
         {
             return new KnyttPoint(int.Parse(data["Positions"]["X Map"]), int.Parse(data["Positions"]["Y Map"]));
