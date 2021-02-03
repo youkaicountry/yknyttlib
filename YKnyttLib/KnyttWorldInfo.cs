@@ -13,6 +13,9 @@ namespace YKnyttLib
         public List<string> Categories { get; }
         public int Format { get; }
 
+        public int Clothes { get; }
+        public int Skin { get; }
+
         public KnyttWorldInfo(KeyDataCollection world_data)
         {
             this.Difficulties = new List<string>();
@@ -24,9 +27,14 @@ namespace YKnyttLib
             this.Size = world_data["Size"];
             this.Format = int.Parse(world_data["Format"]);
 
+            this.Clothes = KnyttUtil.parseBGRString(world_data["Clothes"], 0xEFEFEF);
+            this.Skin = KnyttUtil.parseBGRString(world_data["Skin"], 0x9CB5D6);
+
             parseMultiCategory(world_data, "Category", Categories, new string[] { "A", "B" });
             parseMultiCategory(world_data, "Difficulty", Difficulties, new string[] { "A", "B", "C" });
         }
+
+        
 
         private void parseMultiCategory(KeyDataCollection world_data, string base_name, List<string> target, string[] sub)
         {
