@@ -48,6 +48,7 @@
     <Compile Include="KnyttArea.cs" />
     <Compile Include="KnyttSwitch.cs" />
     <Compile Include="KnyttTrigger.cs" />
+    <Compile Include="KnyttUtil.cs" />
     <Compile Include="KnyttWarp.cs" />
     <Compile Include="KnyttWorldManager.cs" />
     <Compile Include="Paging\KnyttPagingPolicy.cs" />
