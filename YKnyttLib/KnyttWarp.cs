@@ -56,7 +56,7 @@ namespace YKnyttLib
         {
             string key = string.Format("Warp{0}({1})", axis, dir);
             if (!data.ContainsKey(key)) { return 0; }
-            return int.Parse(data[key]);
+            return int.TryParse(data[key], out var i) ? i : 0;
         }
     }
 }

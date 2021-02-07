@@ -68,7 +68,7 @@ namespace YKnyttLib
         {
             string value = getStringINIValue(data, name);
             if (value == null) { return @default; }
-            return int.Parse(value);
+            return int.TryParse(value, out var i) ? i : 0;
         }
 
         protected string getStringINIValue(KeyDataCollection data, string name)

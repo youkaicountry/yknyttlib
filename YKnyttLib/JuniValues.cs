@@ -75,7 +75,8 @@ namespace YKnyttLib
 
         public bool check(Flag flag)
         {
-            return flag.true_flag ? true :
+            return flag == null ? false :
+                   flag.true_flag ? true :
                    flag.power ? Powers[flag.number] : Flags[flag.number];
         }
 
