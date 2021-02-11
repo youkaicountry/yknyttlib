@@ -20,10 +20,10 @@ namespace YKnyttLib
 
         public IniData INIData { get; private set; }
 
-        public string WorldDirectory { get; private set; }
+        public string WorldDirectory { get; private set; } // Full path
 
         string _dir_name;
-        public string WorldDirectoryName
+        public string WorldDirectoryName // Formatted name
         { 
             get { return _dir_name; } 
             
