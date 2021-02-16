@@ -150,24 +150,24 @@ namespace YKnyttLib
         protected abstract object getExternalTexture(string filepath);
         protected abstract object getSystemTexture(string filepath);
 
-        public object getWorldSound(string filepath)
+        public object getWorldSound(string filepath, bool loop)
         {
             if (BinMode)
             {
                 var data = BinLoader.GetFile(filepath);
-                if (data != null) { return bytesToSound(data); }
+                if (data != null) { return bytesToSound(data, loop); }
             }
             else
             {
-                var t = getExternalSound(filepath);
+                var t = getExternalSound(filepath, loop);
                 if (t != null) { return t; }
             }
-            return getSystemSound(filepath);
+            return getSystemSound(filepath, loop);
         }
 
-        protected abstract object bytesToSound(byte[] data);
-        protected abstract object getExternalSound(string filepath);
-        protected abstract object getSystemSound(string filepath);
+        protected abstract object bytesToSound(byte[] data, bool loop);
+        protected abstract object getExternalSound(string filepath, bool loop);
+        protected abstract object getSystemSound(string filepath, bool loop);
 
 
         // TODO: This logic needs refactoring when things are fleshed out

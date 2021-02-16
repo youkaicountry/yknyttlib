@@ -197,8 +197,6 @@ namespace YKnyttLib
 
         private string getValue(string section, string key)
         {
-            if (!data.Sections.ContainsSection(section)) { return null; }
-            if (!data[section].ContainsKey(key)) { return null; }
             return data[section][key];
         }
 
