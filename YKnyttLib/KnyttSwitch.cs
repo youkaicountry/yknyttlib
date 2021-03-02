@@ -53,7 +53,8 @@ namespace YKnyttLib
             Visible = getBoolINIValue(data, "Visible", true);
             OnTouch = getBoolINIValue(data, "Touch", false);
             DenyHologram = getBoolINIValue(data, "DenyHologram", false);
-            Shape = (SwitchShape)getIntINIValue(data, "Type");
+            int shape = getIntINIValue(data, "Type");
+            Shape = shape >= 0 && shape < 4 ? (SwitchShape)shape : SwitchShape.SPOT;
             Sound = getStringINIValue(data, "Sound");
         }
         
