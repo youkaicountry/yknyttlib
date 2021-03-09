@@ -105,43 +105,22 @@ namespace YKnyttLib
             coins_spent = int.TryParse(getValue("Extras", "Coins Spent"), out var c) ? c : 0;
         }
 
-        public HashSet<KnyttPoint> VisitedAreas
+        public BitArray VisitedAreas
         {
             set
             {
-                if (value.Count == 0) { return; }
-
-                int size = World.Size.Area;
-                int width = World.Size.x;
-                var bits = new BitArray(size, false);
-                foreach (var p in value)
-                {
-                    bits[(p.y - World.MinBounds.y) * width + (p.x - World.MinBounds.x)] = true;
-                }
-                Int32[] packed = new Int32[(size - 1) / 32 + 1];
-                bits.CopyTo(packed, 0);
+                if (value == null) { return; }
+                Int32[] packed = new Int32[(value.Length - 1) / 32 + 1];
+                value.CopyTo(packed, 0);
                 setValue("Extras", "Visited Areas", String.Join(",", packed));
             }
             
             get
             {
-                int width = World.Size.x;
-                var visited = new HashSet<KnyttPoint>();
-
                 var visited_save = getValue("Extras", "Visited Areas");
-                if (visited_save == null) { return visited; }
-                
-                // TODO: slow for very large worlds. Use BitArray instead of HashSet<KnyttPoint> for property?
+                if (visited_save == null || visited_save == "") { return null; }
                 Int32[] packed = visited_save.Split(',').Select(v => int.Parse(v)).ToArray();
-                var bits = new BitArray(packed);
-                for (int i = 0; i < bits.Count; i++)
-                {
-                    if (bits[i])
-                    {
-                        visited.Add(new KnyttPoint(i % width + World.MinBounds.x, i / width + World.MinBounds.y));
-                    }
-                }
-                return visited;
+                return new BitArray(packed);
             }
         }
 
@@ -153,13 +132,13 @@ namespace YKnyttLib
 
         public HashSet<string> Cutscenes
         {
-            get { return getValue("Extras", "Cutscenes")?.Split(',').ToHashSet() ?? new HashSet<string>(); }
+            get { return getValue("Extras", "Cutscenes")?.Split(',').Where(s => s != "").ToHashSet() ?? new HashSet<string>(); }
             set { setValue("Extras", "Cutscenes", String.Join(",", value)); }
         }
 
         public HashSet<string> Endings
         {
-            get { return getValue("Extras", "Endings")?.Split(',').ToHashSet() ?? new HashSet<string>(); }
+            get { return getValue("Extras", "Endings")?.Split(',').Where(s => s != "").ToHashSet() ?? new HashSet<string>(); }
             set { setValue("Extras", "Endings", String.Join(",", value)); }
         }
 

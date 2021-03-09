@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using System;
 
@@ -27,7 +28,7 @@ namespace YKnyttLib
         public bool[] Flags { get; }
         public bool[] Collectables { get; private set; }
         public int CoinsSpent { get; set; }
-        public HashSet<KnyttPoint> VisitedAreas { get; private set; }
+        public BitArray VisitedAreas { get; private set; }
         public string Attachment { get; set; }
         public HashSet<string> Cutscenes { get; private set; }
         public HashSet<string> Endings { get; private set; }
@@ -54,7 +55,6 @@ namespace YKnyttLib
             Powers = new bool[13];
             Flags = new bool[10];
             Collectables = new bool[200];
-            VisitedAreas = new HashSet<KnyttPoint>();
             Cutscenes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             Endings = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         }
@@ -87,6 +87,17 @@ namespace YKnyttLib
         public int getCoinCount() { return Collectables.Skip(51).Take(100).Where(a => a).Count() - CoinsSpent; }
         public int getArtifactsCount() { return Collectables.Skip(151).Take(49).Where(a => a).Count(); }
         public int getArtifactsCount(int i) { return Collectables.Skip(151 + i * 7).Take(7).Where(a => a).Count(); }
+
+        public void setVisited(KnyttArea area)
+        {
+            if (VisitedAreas == null) { VisitedAreas = new BitArray(area.World.Map.Length, false); }
+            VisitedAreas.Set(area.World.getMapIndex(area.Position), true);
+        }
+
+        public bool isVisited(KnyttArea area)
+        {
+            return VisitedAreas.Get(area.World.getMapIndex(area.Position));
+        }
 
         public void writeToSave(KnyttSave save)
         {
