@@ -57,6 +57,9 @@
     <Compile Include="KnyttWorldInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="KnyttShift.cs" />
+    <Compile Include="Logging\IKnyttLoggerTarget.cs" />
+    <Compile Include="Logging\KnyttLogger.cs" />
+    <Compile Include="Logging\KnyttLogMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="IniParser">
