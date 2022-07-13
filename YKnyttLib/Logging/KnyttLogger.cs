@@ -49,5 +49,37 @@ namespace YKnyttLib.Logging
                 target.NewMessage(m);
             }
         }
+
+        // Convenience functions
+
+        public static void Trace(string message, KnyttPoint? worldPos=null, KnyttPoint? screenPos=null)
+        {
+            Log(Level.TRACE, message, worldPos, screenPos);
+        }
+
+        public static void Debug(string message, KnyttPoint? worldPos=null, KnyttPoint? screenPos=null)
+        {
+            Log(Level.DEBUG, message, worldPos, screenPos);
+        }
+
+        public static void Info(string message, KnyttPoint? worldPos=null, KnyttPoint? screenPos=null)
+        {
+            Log(Level.INFO, message, worldPos, screenPos);
+        }
+
+        public static void Warn(string message, KnyttPoint? worldPos=null, KnyttPoint? screenPos=null)
+        {
+            Log(Level.WARN, message, worldPos, screenPos);
+        }
+
+        public static void Error(string message, KnyttPoint? worldPos=null, KnyttPoint? screenPos=null)
+        {
+            Log(Level.ERROR, message, worldPos, screenPos);
+        }
+
+        public static void Fatal(string message, KnyttPoint? worldPos=null, KnyttPoint? screenPos=null)
+        {
+            Log(Level.FATAL, message, worldPos, screenPos);
+        }
     }
 }
