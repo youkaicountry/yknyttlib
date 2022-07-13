@@ -4,7 +4,7 @@ namespace YKnyttLib.Logging
 {
     public struct KnyttLogMessage
     {
-        private const string dateFormat = "yyyy-M-dd HH:mm:ss.FFF";
+        private const string dateFormat = "yyyy-M-dd HH:mm:ss.fff";
 
         public KnyttLogger.Level Level;
         public string Value;
