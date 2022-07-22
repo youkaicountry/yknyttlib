@@ -2,6 +2,6 @@
 {
     public interface ICommand
     {
-        string Execute<T>(T environment);
+        string Execute(object environment);
     }
 }
