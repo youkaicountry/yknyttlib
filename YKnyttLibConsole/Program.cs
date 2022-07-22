@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using YKnyttLib;
+using YKnyttLib.Parser;
 using YUtil.BinaryTools.Base58;
 
 namespace YKnyttLibConsole
 {
-    class TestKnyttWorld : KnyttWorld
+    /*class TestKnyttWorld : KnyttWorld
     {
         protected override object bytesToSound(byte[] data)
         {
@@ -53,7 +55,7 @@ namespace YKnyttLibConsole
         {
             throw new NotImplementedException();
         }
-    }
+    }*/
 
     class Program
     {
@@ -103,7 +105,7 @@ namespace YKnyttLibConsole
                 Console.WriteLine(fname);
             }*/
 
-            KnyttWorld world = new TestKnyttWorld();
+            /*KnyttWorld world = new TestKnyttWorld();
             string world_ini = File.ReadAllText("Nifflas - The Machine/World.ini");
             world.loadWorldConfig(world_ini);
             world.setDirectory("...", "Nifflas - Tutocdd2342342131235rial");
@@ -125,6 +127,13 @@ namespace YKnyttLibConsole
             var save2 = KnyttSave.FromPassword(world, password);
             Console.WriteLine(save2);
 
+            Console.ReadKey();*/
+
+            CommandSet cs = new CommandSet();
+            cs.AddCommand(new CommandDeclaration("test", "test desc", false, null, new CommandArg("boolarg", CommandArg.Type.BoolArg), new CommandArg("stringarg", CommandArg.Type.StringArg)));
+
+            var p = new CommandParser(cs);
+            var r = p.Parse("test true \"booppppppppp\"");
             Console.ReadKey();
         }
 
