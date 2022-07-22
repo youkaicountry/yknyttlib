@@ -57,7 +57,7 @@ namespace YKnyttLib.Parser
         private Regex skipRE = new Regex(@"^\s*", RegexOptions.Compiled);
         private Regex terminatorRE = new Regex(@"^(;|$)", RegexOptions.Compiled);
         private Regex simpleStringRE = new Regex(@"^[^\s""';]+", RegexOptions.Compiled);
-        private Regex floatRE = new Regex(@"^((\d+(\.\d*)?)|(\.\d+))", RegexOptions.Compiled);
+        private Regex floatRE = new Regex(@"^[+-]?((\d+(\.\d*)?)|(\.\d+))", RegexOptions.Compiled);
         private Regex uintRE = new Regex(@"^[+]?[0-9]+", RegexOptions.Compiled);
         private Regex intRE = new Regex(@"^[+-]?[0-9]+", RegexOptions.Compiled);
         private Regex boolRE = new Regex(@"^(?<false>[Ff][Aa][Ll][Ss][Ee]|0)|(?<true>[Tt][Rr][Uu][Ee]|1)", RegexOptions.Compiled);
