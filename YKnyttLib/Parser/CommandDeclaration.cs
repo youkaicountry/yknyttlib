@@ -4,7 +4,7 @@ namespace YKnyttLib.Parser
 {
     public class CommandDeclaration
     {
-		public delegate ICommand CommandInstantiation();
+		public delegate ICommand CommandInstantiation(CommandParseResult result);
 
         public string Name { get; }
         public string Description { get; }
