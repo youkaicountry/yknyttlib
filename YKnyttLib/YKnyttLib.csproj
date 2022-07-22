@@ -55,7 +55,7 @@
     <Compile Include="Paging\KnyttRectPaging.cs" />
     <Compile Include="KnyttWorld.cs" />
     <Compile Include="KnyttWorldInfo.cs" />
-    <Compile Include="Parser\Command.cs" />
+    <Compile Include="Parser\ICommand.cs" />
     <Compile Include="Parser\CommandArg.cs" />
     <Compile Include="Parser\CommandDeclaration.cs" />
     <Compile Include="Parser\CommandParser.cs" />
