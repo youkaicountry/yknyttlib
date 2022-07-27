@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace YKnyttLib.Parser
 {
@@ -19,6 +20,16 @@ namespace YKnyttLib.Parser
             Commands.Add(decl);
             Name2Command.Add(decl.Name, decl);
             Revision++;
+        }
+
+        public string[] MakeList(bool pretty)
+        {
+            var com = Commands.Where(x => !x.Hidden).OrderBy(x => x.Name);
+            
+            if (!pretty) { return com.Select(x => x.Name).ToArray(); }
+            
+            int max = com.Max(x => x.Name.Length);
+            return com.Select(x => $"{x.Name.PadRight(max)} - {x.Description}").ToArray();
         }
     }
 }

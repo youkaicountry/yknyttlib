@@ -1,4 +1,5 @@
-﻿using YKnyttLib.Logging;
+﻿using System.Linq;
+using YKnyttLib.Logging;
 
 namespace YKnyttLib.Parser
 {
@@ -38,15 +39,7 @@ namespace YKnyttLib.Parser
 
         public override string ToString()
         {
-            /*
-             * s := d.Name
-	            for _, arg := range d.Args {
-		            s += fmt.Sprintf(" %s", arg.String())
-	            }
-
-	            return s
-            */
-			return "";
+            return $"{Name} {string.Join(" ", Args.Select(x => x.ToString()))}";
         }
     }
 }
